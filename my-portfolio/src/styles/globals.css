@@ -1,26 +1,422 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #050400;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.crt-wrap {
+  background: #0a0800;
+  width: 100%;
+  max-width: 100%;
+  min-height: 100vh;
+  font-family: 'Share Tech Mono', monospace;
+  color: #ffb000;
+  position: relative;
+  overflow: hidden;
+  border: 3px solid #1a1200;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  pointer-events: none;
+  z-index: 10;
+}
+
+.phosphor-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(255, 176, 0, 0.05) 0%, transparent 75%);
+  pointer-events: none;
+  z-index: 9;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+  z-index: 8;
+}
+
+.crt-inner {
+  position: relative;
+  z-index: 5;
+  padding: 24px 28px 32px;
+}
+
+.crt-header {
+  border-bottom: 1px solid #5a3a00;
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.crt-header-title {
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  color: #ffcc00;
+  text-shadow: 0 0 8px #ffaa00;
+  letter-spacing: 2px;
+}
+
+.crt-header-right {
+  font-size: 11px;
+  color: #7a5500;
+  letter-spacing: 1px;
+}
+
+.crt-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #3a2400;
+  flex-wrap: wrap;
+}
+
+.crt-nav button {
+  background: none;
+  border: none;
+  color: #7a5500;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 8px 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s ease;
+}
+
+.crt-nav button:hover, .crt-nav button.active {
+  color: #ffb000;
+  border-bottom-color: #ffb000;
+  text-shadow: 0 0 6px #ffaa00;
+}
+
+.prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.prompt-sym { 
+  color: #39d353; 
+  text-shadow: 0 0 6px #39d353; 
+}
+
+.prompt-cmd { 
+  color: #ffcc00; 
+}
+
+.prompt-out { 
+  color: #ffb000; 
+  margin-bottom: 16px; 
+  padding-left: 16px; 
+  font-size: 12px; 
+  line-height: 1.8; 
+}
+
+.crt-title {
+  font-family: 'VT323', monospace;
+  font-size: 46px;
+  color: #ffcc00;
+  text-shadow: 0 0 12px #ffaa00, 0 0 30px rgba(255, 136, 0, 0.25);
+  letter-spacing: 3px;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.crt-subtitle {
+  font-size: 12px;
+  color: #cc8800;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 4px #aa6600;
+}
+
+.crt-desc {
+  font-size: 13px;
+  color: #aa7700;
+  line-height: 1.8;
+  max-width: 540px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.crt-badge-row { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 6px; 
+  margin-bottom: 24px; 
+}
+
+.crt-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border: 1px solid #5a3a00;
+  color: #cc8800;
+  letter-spacing: 1px;
+}
+
+.crt-badge.on { 
+  border-color: #39d353; 
+  color: #39d353; 
+  text-shadow: 0 0 4px #39d353; 
+}
+
+.crt-btn-row { 
+  display: flex; 
+  gap: 10px; 
+  flex-wrap: wrap; 
+}
+
+.crt-btn {
+  background: none;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  padding: 6px 16px;
+  border: 1px solid #5a3a00;
+  color: #aa7700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.1s ease;
+}
+
+.crt-btn:hover { 
+  border-color: #ffb000; 
+  color: #ffcc00; 
+  text-shadow: 0 0 6px #ffaa00; 
+}
+
+.crt-btn.primary { 
+  border-color: #39d353; 
+  color: #39d353; 
+  text-shadow: 0 0 4px #39d353; 
+}
+
+.divider { 
+  border: none; 
+  border-top: 1px solid #3a2400; 
+  margin: 20px 0; 
+}
+
+.skill-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 12px; 
+}
+
+.skill-box {
+  border: 1px solid #3a2400;
+  padding: 14px;
+  background: rgba(255, 176, 0, 0.01);
+}
+
+.skill-label {
+  font-size: 11px;
+  color: #5a3a00;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.skill-label span { 
+  color: #39d353; 
+  text-shadow: 0 0 4px #39d353; 
+}
+
+.tag-row { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 6px; 
+}
+
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border: 1px solid #3a2400;
+  color: #aa7700;
+}
+
+.proj-card {
+  border: 1px solid #3a2400;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: rgba(255, 176, 0, 0.01);
+  transition: border-color 0.15s ease;
+}
+
+.proj-card:hover { 
+  border-color: #aa7700; 
+}
+
+.proj-card.live { border-color: #39d35340; }
+.proj-card.hack { border-color: #e3b34130; }
+
+.proj-name-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.proj-name { 
+  font-size: 14px; 
+  color: #ffcc00; 
+  text-shadow: 0 0 5px rgba(255, 170, 0, 0.3); 
+}
+
+.preview-link {
+  font-size: 11px;
+  color: #39d353;
+  text-decoration: none;
+  border: 1px dashed #39d35340;
+  padding: 1px 6px;
+  transition: all 0.1s ease;
+}
+
+.preview-link:hover {
+  background: rgba(57, 211, 83, 0.1);
+  text-shadow: 0 0 4px #39d353;
+  border-style: solid;
+}
+
+.proj-meta { 
+  font-size: 10px; 
+  color: #5a3a00; 
+  margin-bottom: 8px; 
+  letter-spacing: 1px; 
+}
+
+.exp-badge { 
+  font-size: 10px; 
+  padding: 1px 6px; 
+  border: 1px solid #39d35360; 
+  color: #39d353; 
+  margin-left: 8px; 
+  vertical-align: middle; 
+  display: inline-block;
+}
+
+.exp-badge.hack { border-color: #e3b34160; color: #e3b341; }
+.exp-badge.school { border-color: #bc8cff60; color: #bc8cff; }
+
+.proj-points { 
+  list-style: none; 
+  font-size: 12px; 
+  color: #aa7700; 
+  line-height: 1.8; 
+  margin-bottom: 12px;
+}
+
+.proj-points li::before { 
+  content: '> '; 
+  color: #39d353; 
+}
+
+.proj-stack { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 6px; 
+}
+
+.stack-tag { 
+  font-size: 10px; 
+  padding: 2px 8px; 
+  border: 1px solid #3a2400; 
+  color: #7a5500; 
+}
+
+.contact-grid { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px; 
+}
+
+.contact-item {
+  border: 1px solid #3a2400;
+  padding: 12px;
+  text-decoration: none;
+  color: #aa7700;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.1s ease;
+}
+
+.contact-item:hover { 
+  border-color: #ffb000; 
+  color: #ffcc00; 
+  text-shadow: 0 0 4px #ffaa00; 
+}
+
+.contact-item .ci-label { 
+  font-size: 12px; 
+  color: #ffb000; 
+  margin-bottom: 1px; 
+}
+
+.contact-item .ci-val { 
+  font-size: 11px; 
+  color: #7a5500; 
+}
+
+.crt-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 15px;
+  background: #ffb000;
+  box-shadow: 0 0 6px #ffaa00;
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: crt-blink 1s step-end infinite;
+}
+
+@keyframes crt-blink { 
+  0%, 100% { opacity: 1; } 
+  50% { opacity: 0; } 
+}
+
+.edu-box {
+  border: 1px solid #3a2400;
+  padding: 14px;
+  background: rgba(255, 176, 0, 0.015);
+}
+
+@media (max-width: 640px) {
+  .skill-grid, .contact-grid {
+    grid-template-columns: 1fr;
+  }
+  .contact-item[style*="grid-column"] {
+    grid-column: auto !important;
+  }
 }
